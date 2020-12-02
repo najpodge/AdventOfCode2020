@@ -12,7 +12,7 @@ def sum3entries(entries):
                     return entries[i] * entries[j] * entries[k]
 
 def main():
-    with open('input1.txt', 'r') as input:
+    with open('input/input1.txt', 'r') as input:
         entries = [int(line.strip()) for line in input]
 
     print("Part 1 answer: ", sum2entries(entries))
@@ -20,6 +20,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-#Part 1 answer:  1020084
-#Part 2 answer:  295086480
