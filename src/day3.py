@@ -6,8 +6,7 @@ def numTrees(map, right, down):
     while y < len(map):
         numTrees += 1 if map[y][x] == '#' else 0
         y += down
-        x += right
-        x = x - width if x >= width else x
+        x = (x + right) % width
     return numTrees
 
 def main():
@@ -15,10 +14,10 @@ def main():
         map = [line.strip() for line in input]
     
     part1 = numTrees(map, 3, 1)
-    parttwo = numTrees(map, 1, 1) * part1 * numTrees (map, 5, 1) * numTrees(map, 7, 1) * numTrees(map, 1, 2)
+    part2 = numTrees(map, 1, 1) * part1 * numTrees(map, 5, 1) * numTrees(map, 7, 1) * numTrees(map, 1, 2)
 
     print("Part 1 answer: ", part1)
-    print("Part 2 answer: ", parttwo)
+    print("Part 2 answer: ", part2)
 
 if __name__ == "__main__":
     main()
