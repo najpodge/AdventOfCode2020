@@ -33,7 +33,8 @@ def main():
     # but being lazy because I only had one missing seat anyway.
     seat_ids.sort()
     missing = [x for x in range(seat_ids[0], seat_ids[-1]+1) if x not in seat_ids] 
-
+    print(seat_ids)
+    print(missing)
     print("Part 1: ", max(seat_ids))
     print("Part 2: ", missing[0])
 
