@@ -6,26 +6,40 @@ def add_rule_values(rule, span, rules):
     for i in range(beginning, end):
         rules[rule].append(i)
 
-def valid_rule_in_order(rule, rules, tickets):
-    for ticket in tickets:
-        if not ticket[0] in rules[rule]:
-            return False
-    return rule
-
-def get_order(rules, tickets):
+def get_valid_columns(rules, tickets):
+    columns = len(tickets[0])
+    num_tickets = len(tickets)
+    rule_order = {} 
     for rule in rules:
-        print(rule)
-        order = []
-        valid_rule = valid_rule_in_order(rule, rules, tickets)
-        if valid_rule:
-            order.append(valid_rule)
-            next_rules = copy.deepcopy(rules)
-            next_rules.pop(rule)
-            next_tickets = [t[1:] for t in tickets]
-            order = order + get_order(next_rules, next_tickets)
-            if len(order) == len(rules):
-                return order  
-    return []
+        rule_order[rule] = []
+        for i in range(columns):
+            sum = 0
+            for ticket in tickets:
+                if ticket[i] in rules[rule]:
+                    sum += 1
+            if sum == num_tickets:
+                rule_order[rule].append(i)
+    return rule_order
+
+def delete_column(rule_columns, column):
+    for rule in rule_columns:
+        if column in rule_columns[rule]:
+            rule_columns[rule].remove(column)
+    return rule_columns
+
+def get_next_rule(rule_columns):
+    for rule in rule_columns:
+        if len(rule_columns[rule]) == 1:
+            column = rule_columns[rule][0]
+            return rule, column, delete_column(rule_columns, column)
+
+def get_rule_order(rule_columns):
+    order = {}
+    while rule_columns:
+        next_rule, column, rule_columns = get_next_rule(rule_columns)
+        rule_columns.pop(next_rule)
+        order[column] = next_rule
+    return order
 
 def main():
     rules = {}
@@ -64,21 +78,16 @@ def main():
                 valid = False
         if not valid:
             mark_for_delete.append(ticket)
-    
+    print("Part 1: ", sum(out_of_range))
+
     for ticket in mark_for_delete:
         tickets.remove(ticket)
-
-    order = get_order(rules, tickets)
-    print(len(order))
-    print(len(rules))
+    rule_columns = get_valid_columns(rules, tickets)
+    order = get_rule_order(rule_columns)
     product = 1
-    for i in range(len(order)):
-        if 'departure' in order[i]:
-            #print(order[i],tickets[0][i])
-            product *= tickets[0][i]
-
-    print(order)
-    print("Part 1: ", sum(out_of_range))
+    for column in order:
+        if 'departure' in order[column]:
+            product *= tickets[0][column]
     print("Part 2: ", product)
 
 if __name__ == "__main__":
